@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Shutterstock.EnhanceDashboard
 // @namespace    
-// @version      1.0.0
+// @version      1.0.2
 // @updateURL    https://gist.github.com/deymosD/e525474294ee40a44e54/raw/50fe846ee72e7f24dc9319d96661533bda1625ff/Shutterstock.ShowDownloadLocations.user.js
 // @description  Show detailed localization to Shutterstock Latest Downloads map, based on Satinka's https://gist.github.com/satinka/5479a93d389a07d41246
 // @author       Satinka, GG update
@@ -26,7 +26,7 @@ var useShortCountryName = false;       // US (true), or United States of America
 var googleMaps = "https://www.google.com/maps/place/"; 
 var displayEarnings = true; // set to false to disable display of earnings for last 7 days and today on top of popup
 var displayRecentEarnings = true; // set to false to disable display of earnings for recent images 
-var makeOriginalDivsDraggable = false; // makes content on front page draggable, you can move sections around (map, track your sets, graphs, content overview, profile, forum and blog
+var makeOriginalDivsDraggable = true; // makes content on front page draggable, you can move sections around (map, track your sets, graphs, content overview, profile, forum and blog
 
 
 var debug = false; // easier for me during development
@@ -78,9 +78,11 @@ $j(document).ready(function() {
 
 
 function makeDivsDraggable() {
-    var divs = [ "div#dcontent-overview-container", "div#public-info-container", "div.panel-default", "div#earnings-summary-container", "div#resources-container", "div#track-sets-container", "div#download-map-container", "div#top-earners-container", "div#earnings-summary-graph-container"];
+    var divs = [ "div#content-overview-container", "div#public-info-container",  "div#earnings-summary-container", "div#top-earners-container", "div#resources-blog-container",  "div#announcements-container", "div#track-sets-container", "div#download-map-container", "div#top-earners-container", "div#earnings-summary-graph-container"];
 
     divs.forEach( function(entry) {
+                console.log("Making " + entry + "draggable.");
+        $j(entry).css('position', "relative");
         $j(entry).draggable({
             cursor: "move",
             stop: function(event, ui){
@@ -95,6 +97,13 @@ function makeDivsDraggable() {
         }
     }
                 );
+    $j("div#images-primary").hide();
+ 
+     /*  $j("div#public-info-container").hide();
+    $j("div#resources-blog-container").hide();
+    $j("div#announcements-container").hide();
+    */
+    
 }
 
 
