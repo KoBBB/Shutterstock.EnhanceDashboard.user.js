@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         Shutterstock.EnhanceDashboard
 // @namespace    
-// @version      1.0.6
+// @version      1.0.7
 // @updateURL    https://gist.github.com/deymosD/e525474294ee40a44e54/raw/50fe846ee72e7f24dc9319d96661533bda1625ff/Shutterstock.ShowDownloadLocations.user.js
 // @description  Show detailed localization to Shutterstock Latest Downloads map, based on Satinka's https://gist.github.com/satinka/5479a93d389a07d41246
 // @author       Satinka, GG update
 // @match        https://submit.shutterstock.com/dashboard*
 // @copyright    2016, Satinka
 // @require      http://code.jquery.com/jquery-latest.min.js
+// @run-at      document-idle
 // @require      https://code.jquery.com/ui/1.11.4/jquery-ui.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js 
 // @grant        none
@@ -33,12 +34,15 @@ var dragger = "#8cb0ea"; // color of a dragging selection, if you don't like blu
 
 var debug = false; // easier for me during development
 var trackMySales = false; // for future development, saves info on individual sales in local storage
-
+var timeout=1000;
 //===================================
 
 
 var $j = jQuery.noConflict();
 var div;
+
+
+
 
 $j(document).ready(function() {
     createStyles();   
@@ -72,7 +76,17 @@ $j(document).ready(function() {
 
     showLocations();
 
-    (makeOriginalDivsDraggable) && makeDivsDraggable();
+    
+    setTimeout(function(){
+        
+        (makeOriginalDivsDraggable) && makeDivsDraggable();
+        
+    }, timeout);
+    
+    
+    
+    
+    
 (removeRedUploadButton) && removeRedUpload();
     window.setInterval(showLocations,60000); // refresh every 60 seconds
     window.setInterval(retrieveEarnings,60000);
@@ -83,7 +97,7 @@ function removeRedUpload(){
 }
 
 function makeDivsDraggable() {
-    var divs = [ "div#content-overview-container", "div#public-info-container",  "div#earnings-summary-container", "div#resources-container", "div#track-sets-container", "div#unpaid-container", "div#download-map-container", "div#top-earners-container", "div#earnings-summary-graph-container"];
+    var divs = [  "div#public-info-container",  "div#earnings-summary-container", "div#resources-container", "div#track-sets-container", "div#unpaid-container", "div#download-map-container", "div#top-earners-container","div#content-overview-container", "div#earnings-summary-graph-container"];
 
     $j("div.row.row-eq-height:first > div.col-md-6:last > div").wrap("<div id='unpaid-container'></div>");
     
@@ -100,6 +114,7 @@ function makeDivsDraggable() {
         drag.className = "drag";
         drag.innerHTML="grab this to drag me";
         $j(entry).prepend(drag);
+        console.log(drag);
         
         
         
@@ -366,7 +381,7 @@ function createStyles() {
 
     //   var map = "position: fixed; top: 60px; left: 320px; width: 1000px; height: 95%; overflow: auto; background-color: #eeeeee;";
     var close="background-color: " + dragger + "; float: right; padding: 2px; font-size: 8px;z-index:20;";
-    var drag="background-color: " + dragger + "; float: left; padding: 2px; font-size: 8px; z-index:20;";
+    var drag="background-color: " + dragger + "; float: left; position:absolute; top:0; left:0; padding: 2px; font-size: 8px; z-index:20;";
     var dragHover = "cursor: move;";
     addCSSRule(sheet, "div#dragContainer", ggDL, 0);
     addCSSRule(sheet, "div.close", close, 0);
