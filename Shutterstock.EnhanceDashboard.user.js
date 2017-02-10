@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Shutterstock.EnhanceDashboard
 // @namespace    
-// @version      1.0.5
-// @updateURL    https://gist.github.com/deymosD/ff4b0effbffefd76f58300b01e45afd4/raw/49c4aceb549ede740ff1ec6409254c46da5ba207/Shutterstock.EnhanceDashboard.user.js
+// @version      1.0.6
+// @updateURL    https://gist.github.com/deymosD/e525474294ee40a44e54/raw/50fe846ee72e7f24dc9319d96661533bda1625ff/Shutterstock.ShowDownloadLocations.user.js
 // @description  Show detailed localization to Shutterstock Latest Downloads map, based on Satinka's https://gist.github.com/satinka/5479a93d389a07d41246
 // @author       Satinka, GG update
 // @match        https://submit.shutterstock.com/dashboard*
@@ -29,6 +29,7 @@ var displayRecentEarnings = true; // set to false to disable display of earnings
 var makeOriginalDivsDraggable = true; // makes content on front page draggable, you can move sections around (map, track your sets, graphs, content overview, profile, forum and blog
 var removeRedUploadButton = true; // makes content on front page draggable, you can move sections around (map, track your sets, graphs, content overview, profile, forum and blog
 
+var dragger = "#8cb0ea"; // color of a dragging selection, if you don't like blue - change it; red looks cool :D
 
 var debug = false; // easier for me during development
 var trackMySales = false; // for future development, saves info on individual sales in local storage
@@ -58,7 +59,7 @@ $j(document).ready(function() {
     
     $j("div#dragContainer").draggable({
         opacity: 0.9,
-        handle: "div",
+         handle: "div",
         stop: function(event, ui){
             localStorage.setItem("positionDownloadLocations", JSON.stringify(ui.position));
         }
@@ -86,9 +87,27 @@ function makeDivsDraggable() {
 
     $j("div.row.row-eq-height:first > div.col-md-6:last > div").wrap("<div id='unpaid-container'></div>");
     
+     $j(document).on('click', 'div.close', function() { // resort by downloads
+             makeDivSmaller($j(this).parent());
+         });
+    
     divs.forEach( function(entry) {
+        var close=document.createElement('div');
+        close.className = "close";
+        close.innerHTML="X";
+        $j(entry).prepend(close);
+        var drag = document.createElement('div');
+        drag.className = "drag";
+        drag.innerHTML="grab this to drag me";
+        $j(entry).prepend(drag);
+        
+        
+        
+        
         $j(entry).draggable({
             cursor: "move",
+            handle: "div.drag",
+            stack:"div.drag",
             stop: function(event, ui){
                 localStorage.setItem(entry, JSON.stringify(ui.position));
             }
@@ -103,6 +122,10 @@ function makeDivsDraggable() {
                 );
 }
 
+function makeDivSmaller(obj) {
+    console.log(obj);
+    obj.hide();
+}
 
 function existsInLocalStorage(key, data) {
     var thisResponseHash = CryptoJS.MD5(data).toString(CryptoJS.enc.Base64);
@@ -342,7 +365,13 @@ function createStyles() {
         "text-shadow: 0 0 5px #fff; text-align: left;";
 
     //   var map = "position: fixed; top: 60px; left: 320px; width: 1000px; height: 95%; overflow: auto; background-color: #eeeeee;";
+    var close="background-color: " + dragger + "; float: right; padding: 2px; font-size: 8px;z-index:20;";
+    var drag="background-color: " + dragger + "; float: left; padding: 2px; font-size: 8px; z-index:20;";
+    var dragHover = "cursor: move;";
     addCSSRule(sheet, "div#dragContainer", ggDL, 0);
+    addCSSRule(sheet, "div.close", close, 0);
+    addCSSRule(sheet, "div.drag", drag, 0);
+    addCSSRule(sheet, "div.drag:hover", dragHover, 0);
     addCSSRule(sheet, "span.refreshCoords", refreshCoords, 0);
 }
 
