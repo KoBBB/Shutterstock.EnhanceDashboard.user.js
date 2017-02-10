@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Shutterstock.EnhanceDashboard
 // @namespace    
-// @version      1.0.4
-// @updateURL    https://gist.github.com/deymosD/e525474294ee40a44e54/raw/50fe846ee72e7f24dc9319d96661533bda1625ff/Shutterstock.ShowDownloadLocations.user.js
+// @version      1.0.5
+// @updateURL    https://gist.github.com/deymosD/ff4b0effbffefd76f58300b01e45afd4/raw/49c4aceb549ede740ff1ec6409254c46da5ba207/Shutterstock.EnhanceDashboard.user.js
 // @description  Show detailed localization to Shutterstock Latest Downloads map, based on Satinka's https://gist.github.com/satinka/5479a93d389a07d41246
 // @author       Satinka, GG update
 // @match        https://submit.shutterstock.com/dashboard*
