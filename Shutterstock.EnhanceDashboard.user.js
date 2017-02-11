@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Shutterstock.EnhanceDashboard
 // @namespace    
-// @version      1.0.7
+// @version      1.0.8
 // @updateURL    https://gist.github.com/deymosD/e525474294ee40a44e54/raw/50fe846ee72e7f24dc9319d96661533bda1625ff/Shutterstock.ShowDownloadLocations.user.js
 // @description  Show detailed localization to Shutterstock Latest Downloads map, based on Satinka's https://gist.github.com/satinka/5479a93d389a07d41246
 // @author       Satinka, GG update
@@ -30,7 +30,7 @@ var displayRecentEarnings = true; // set to false to disable display of earnings
 var makeOriginalDivsDraggable = true; // makes content on front page draggable, you can move sections around (map, track your sets, graphs, content overview, profile, forum and blog
 var removeRedUploadButton = true; // makes content on front page draggable, you can move sections around (map, track your sets, graphs, content overview, profile, forum and blog
 
-var dragger = "#8cb0ea"; // color of a dragging selection, if you don't like blue - change it; red looks cool :D
+var dragger = "#cee7f0"; // color of a dragging selection, if you don't like blue - change it; red looks cool :D
 
 var debug = false; // easier for me during development
 var trackMySales = false; // for future development, saves info on individual sales in local storage
@@ -41,6 +41,12 @@ var timeout=1000;
 var $j = jQuery.noConflict();
 var div;
 
+
+    var link = window.document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css'; // get smoothness CSS; check http://jqueryui.com/themeroller/ for others, just change the theme name in url
+    document.getElementsByTagName("HEAD")[0].appendChild(link);                                       // other themes: http://rtsinani.github.io/jquery-datepicker-skins/, have fun!
 
 
 
@@ -114,10 +120,28 @@ function makeDivsDraggable() {
         drag.className = "drag";
         drag.innerHTML="grab this to drag me";
         $j(entry).prepend(drag);
-        console.log(drag);
-        
-        
-        
+
+        /*
+         $j(entry).resizable({
+             resize: function (e, ui) {
+        var wr = $(this).outerWidth()/$(this).data("width");
+        var hr = $(this).outerHeight()/$(this).data("height");
+
+        $(this).find("*").each(function (i, elm) {
+            var w = $(elm).data("width") * wr;
+            var h = $(elm).data("height") * hr;
+            // Adjusting font size according to smallest ratio
+            var f = $(elm).data("fontSize") * ((hr > wr) ? wr : hr);
+            $(elm).css({
+                "width": w,
+                "height": h,
+                "font-size": f
+            });
+        });
+    },
+         }
+         );
+        */
         
         $j(entry).draggable({
             cursor: "move",
