@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Shutterstock.EnhanceDashboard
 // @namespace    
-// @version      1.0.8
+// @version      1.0.9
 // @updateURL    https://gist.github.com/deymosD/e525474294ee40a44e54/raw/50fe846ee72e7f24dc9319d96661533bda1625ff/Shutterstock.ShowDownloadLocations.user.js
 // @description  Show detailed localization to Shutterstock Latest Downloads map, based on Satinka's https://gist.github.com/satinka/5479a93d389a07d41246
 // @author       Satinka, GG update
@@ -100,6 +100,7 @@ $j(document).ready(function() {
 
 function removeRedUpload(){
     $j("div#images-primary").hide();
+        $j("div#videos-primary").hide();
 }
 
 function makeDivsDraggable() {
