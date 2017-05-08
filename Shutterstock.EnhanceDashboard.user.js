@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Shutterstock.EnhanceDashboard
 // @namespace    
-// @version      1.0.9
+// @version      2.0
 // @updateURL    https://gist.github.com/deymosD/e525474294ee40a44e54/raw/50fe846ee72e7f24dc9319d96661533bda1625ff/Shutterstock.ShowDownloadLocations.user.js
 // @description  Show detailed localization to Shutterstock Latest Downloads map, based on Satinka's https://gist.github.com/satinka/5479a93d389a07d41246
 // @author       Satinka, GG update
@@ -25,8 +25,8 @@
 
 var useShortCountryName = false;       // US (true), or United States of America (false) - false is now default as it looks nicer :)
 var googleMaps = "https://www.google.com/maps/place/"; 
-var displayEarnings = true; // set to false to disable display of earnings for last 7 days and today on top of popup
-var displayRecentEarnings = true; // set to false to disable display of earnings for recent images 
+var displayEarnings = false; // set to false to disable display of earnings for last 7 days and today on top of popup
+var displayRecentEarnings = false; // set to false to disable display of earnings for recent images 
 var makeOriginalDivsDraggable = true; // makes content on front page draggable, you can move sections around (map, track your sets, graphs, content overview, profile, forum and blog
 var removeRedUploadButton = true; // makes content on front page draggable, you can move sections around (map, track your sets, graphs, content overview, profile, forum and blog
 
@@ -52,6 +52,7 @@ var div;
 
 $j(document).ready(function() {
     createStyles();   
+   
     var containerDiv = document.createElement('div');
     containerDiv.id = "dragContainer";
     $j("div.container-fluid").append(containerDiv);
@@ -184,7 +185,8 @@ function showLocations() {
 
 
     $j.ajax({
-        url: window.location.protocol + '//submit.shutterstock.com/show_component.mhtml?component_path=download_map/recent_downloads.mh',
+        //url: window.location.protocol + '//submit.shutterstock.com/show_component.mhtml?component_path=download_map/recent_downloads.mh',
+        url:  window.location.protocol + '//submit.shutterstock.com/api/user/downloads/map',
         type: "get",
         dataType: "html",
         error: function (request, status, error) {
@@ -198,11 +200,12 @@ function showLocations() {
             }
 
             var coords = $j.parseJSON(data);
+           // console.log(coords);
             localStorage.removeItem('lastSevenDays'); 
 
             div.innerHTML = "<span class=\"refreshCoords\">Refresh</span>";
 
-            if (displayEarnings){
+         /*   if (displayEarnings){
                 div.innerHTML += "<H4>Earnings</h4>";
                 retrieveLastWeekEarnings();
                 div.innerHTML += "Last 7 days: <span id=\"last7\"></span>$<br />";
@@ -210,60 +213,49 @@ function showLocations() {
                 //      div.innerHTML += "Lifetime: <span id=\"lifetime\"></span>$<br />";
                 //      div.innerHTML += "Unpaid: <span id=\"unpaid\"></span>$<br />";
             }
+            */
 
             div.innerHTML += "<h4>Download locations</h4>";
 
             $j.each(coords, function( ind, el ) {
                 var id = el.media_id;
-                var img = el.thumb_url;
+                var img = window.location.protocol + '//image.shutterstock.com/mosaic_250/0/0/' + id + '.jpg';
                 var time = el.time;
+                var city = el.city;
+                var country = el.country;
+                var region = el.region;
+                var gps = el.coordinates;
+                var lat = gps[0];
+                var long = gps[1];
                 var loc;
+                console.log(el, id, time, lat, long);
 
-                if (el.latitude !== null && el.longitude !== null) {
-                    $j.ajax({
-                        url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + el.latitude + ',' + el.longitude,
-                        type: "get",
-                        dataType: "html",
-                        error: function (request, status, error) {
-                            console.log(request.responseText);
-                        },
-                        success: function( data ){
-                            var res = $j.parseJSON(data);
-                            // moramo ovako jer je asinkrono. dok u divu ispise tekst, ovo jos nije stiglo sa servera
-                            if (res.status == "OK") {
-                                $j("a.location" + id + "-" + time).text(ExtractLocation(res.results[0].address_components));
-                            } 
-                            else {
-                                $j("a.location" + id + "-" + time).text("Can't convert to location :\(");
-                            }
-
-                        }  
-                    }); 
-
-                }
+                /*
                 if (trackMySales) {
                     localStorage.setItem(id + "-" + time, JSON.stringify(el)); // save image info, key = (id-time_of_download);
                 }
+                */
 
                 if (debug) { console.log("Added " + id + "to local storage"); }
 
                 // if it's footage, need to change thumbnail size; too bad i can't test it with 1 footage a century
                 var footageWidth = "";
-                if (el.media_type != "photo") {
-                    footageWidth = "width=\"100px\" height=\"59\" ";
-                }
+                
+                // if (el.media_type != "photo") {
+                    footageWidth = "width=\"130px\" ";
+                // }
+                
                 div.innerHTML += "<a target=\"_new\" href=\"http://www.shutterstock.com/pic.mhtml?id=" + id + "\"><img " + footageWidth + "src=\"" + img + "\" /></a><br />";
 
-                if (el.latitude  && el.longitude ) {
-                    div.innerHTML +=  "<a class=\"location" + id +  "-" +  time + "\" target=\"_new\" href=\"" + googleMaps + el.latitude + "+"+ el.longitude + "\"></a><br />";
+                if (gps ) {
+                    div.innerHTML +=  "<a class=\"location" + id +  "-" +  time + "\" target=\"_new\" href=\"" + googleMaps + lat + "+"+ long + "\">" + city + ", " + country + "</a><br />";
                 }
                 else {
                     div.innerHTML += "Unknown, middle of Atlantic :)<br />";
                 }
 
-                var n =  new Date().getTimezoneOffset() / 60; // offset from GMT
-                // taking only time from date - 6+n - NY time + offset from GMT gives local - works wine for me
-                var t = new Date((time + (6+n) * 3600) *1000).toTimeString().split(" ")[0]; 
+
+                var t = new Date(time).toLocaleString('hr');
                 if (displayRecentEarnings) {
                     div.innerHTML += "Earnings: <span id=\"earnings" + id + time + "000\">N/A</span><br />";
                     if (debug) {console.log(time)};
