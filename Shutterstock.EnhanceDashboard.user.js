@@ -32,7 +32,7 @@ var removeRedUploadButton = true; // makes content on front page draggable, you 
 
 var dragger = "#cee7f0"; // color of a dragging selection, if you don't like blue - change it; red looks cool :D
 
-var debug = false; // easier for me during development
+var debug = true; // easier for me during development
 var trackMySales = false; // for future development, saves info on individual sales in local storage
 var timeout=1000;
 //===================================
@@ -233,10 +233,10 @@ function showLocations() {
                 if (trackMySales) {
                     localStorage.setItem(id + "-" + time, JSON.stringify(el)); // save image info, key = (id-time_of_download);
                 }
-                */
+               
 
                 if (debug) { console.log("Added " + id + "to local storage"); }
-
+ */
                 // if it's footage, need to change thumbnail size; too bad i can't test it with 1 footage a century
                 var footageWidth = "";
                 
@@ -348,36 +348,6 @@ function retrieveEarnings(){
             }
         }); 
     }
-}
-
-
-
-
-
-// following code created by https://gist.github.com/satinka/5479a93d389a07d41246
-
-function ExtractLocation(details) { // created by https://gist.github.com/satinka/5479a93d389a07d41246
-    var loc = "";
-    var country = "";
-    var locality = "";
-    var admin_area1 = "";
-    var admin_area2 = "";
-
-    $j.each(details, function( ind, el ) {
-        if ($j.inArray("country", el.types) != -1) 
-            country = useShortCountryName ? el.short_name : el.long_name;
-        if ($j.inArray("locality", el.types) != -1) 
-            locality = el.long_name;
-        if ($j.inArray("administrative_area_level_1", el.types) != -1) 
-            admin_area1 = el.short_name;
-        if ($j.inArray("administrative_area_level_2", el.types) != -1) 
-            admin_area2 = el.long_name;
-    });
-    loc = loc + ((locality !== "") ? locality + ", " : "") +
-        ((admin_area2 != "") ? admin_area2 + ", " : "") +
-        ((admin_area1 != "") ? admin_area1 + ", " : "") +
-        ((country !== "") ? country : "");
-    return loc;
 }
 
 function createStyles() {
