@@ -96,7 +96,7 @@ $j(document).ready(function() {
     
 (removeRedUploadButton) && removeRedUpload();
     window.setInterval(showLocations,60000); // refresh every 60 seconds
-    window.setInterval(retrieveEarnings,60000);
+    // window.setInterval(retrieveEarnings,60000);
 });
 
 function removeRedUpload(){
@@ -194,13 +194,13 @@ function showLocations() {
         },
         success: function( data ){
             if (existsInLocalStorage('lastDownloads', data)) {
-                retrieveEarnings();
+               // retrieveEarnings();
                 $j("div.refreshCoords").text("Refresh");
                 return true;
             }
 
             var coords = $j.parseJSON(data);
-           // console.log(coords);
+
             localStorage.removeItem('lastSevenDays'); 
 
             div.innerHTML = "<span class=\"refreshCoords\">Refresh</span>";
@@ -228,7 +228,6 @@ function showLocations() {
                 var lat = gps[0];
                 var long = gps[1];
                 var loc;
-                console.log(el, id, time, lat, long);
 
                 /*
                 if (trackMySales) {
@@ -270,7 +269,7 @@ function showLocations() {
             });
 
             localStorage.removeItem('lastEarnings');
-            retrieveEarnings();
+           // retrieveEarnings();
 
         }
     });
