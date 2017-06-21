@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Shutterstock.EnhanceDashboard
 // @namespace    
-// @version      2.0
+// @version      2.0.1
 // @updateURL    https://gist.github.com/deymosD/e525474294ee40a44e54/raw/50fe846ee72e7f24dc9319d96661533bda1625ff/Shutterstock.ShowDownloadLocations.user.js
 // @description  Show detailed localization to Shutterstock Latest Downloads map, based on Satinka's https://gist.github.com/satinka/5479a93d389a07d41246
 // @author       Satinka, GG update
@@ -32,7 +32,7 @@ var removeRedUploadButton = true; // makes content on front page draggable, you 
 
 var dragger = "#cee7f0"; // color of a dragging selection, if you don't like blue - change it; red looks cool :D
 
-var debug = true; // easier for me during development
+var debug = false; // easier for me during development
 var trackMySales = false; // for future development, saves info on individual sales in local storage
 var timeout=1000;
 //===================================
@@ -105,6 +105,8 @@ function removeRedUpload(){
 }
 
 function makeDivsDraggable() {
+    
+    $j("div#referral-banner").hide();
     var divs = [  "div#public-info-container",  "div#earnings-summary-container", "div#resources-container", "div#track-sets-container", "div#unpaid-container", "div#download-map-container", "div#top-earners-container","div#content-overview-container", "div#earnings-summary-graph-container"];
 
     $j("div.row.row-eq-height:first > div.col-md-6:last > div").wrap("<div id='unpaid-container'></div>");
