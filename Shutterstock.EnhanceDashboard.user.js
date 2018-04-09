@@ -10,7 +10,7 @@
 // @require      http://code.jquery.com/jquery-latest.min.js
 // @run-at      document-idle
 // @require      https://code.jquery.com/ui/1.11.4/jquery-ui.min.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js 
+// @require      https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js
 // @grant        none
 
 // ==/UserScript==
@@ -23,24 +23,27 @@
 
 'use strict';
 
-var useShortCountryName = false;       // US (true), or United States of America (false) - false is now default as it looks nicer :)
-var googleMaps = "https://www.google.com/maps/place/"; 
-var displayEarnings = false; // set to false to disable display of earnings for last 7 days and today on top of popup
-var displayRecentEarnings = false; // set to false to disable display of earnings for recent images 
+//SodaP var useShortCountryName = false;       // US (true), or United States of America (false) - false is now default as it looks nicer :)
+var useShortCountryName = true;       // US (true), or United States of America (false) - false is now default as it looks nicer :)
+var googleMaps = "https://www.google.com/maps/place/";
+//SodaP var displayEarnings = false; // set to false to disable display of earnings for last 7 days and today on top of popup
+var displayEarnings = true; // set to false to disable display of earnings for last 7 days and today on top of popup
+//SodaP var displayRecentEarnings = false; // set to false to disable display of earnings for recent images
+var displayRecentEarnings = true; // set to false to disable display of earnings for recent images
 var makeOriginalDivsDraggable = true; // makes content on front page draggable, you can move sections around (map, track your sets, graphs, content overview, profile, forum and blog
 var removeRedUploadButton = true; // makes content on front page draggable, you can move sections around (map, track your sets, graphs, content overview, profile, forum and blog
 
 var dragger = "#cee7f0"; // color of a dragging selection, if you don't like blue - change it; red looks cool :D
 
-var debug = false; // easier for me during development
-var trackMySales = false; // for future development, saves info on individual sales in local storage
+//SodaP var debug = false; // easier for me during development
+var debug = true; // easier for me during development
+//SodaP var trackMySales = false; // for future development, saves info on individual sales in local storage
+var trackMySales = true; // for future development, saves info on individual sales in local storage
 var timeout=1000;
 //===================================
 
-
 var $j = jQuery.noConflict();
 var div;
-
 
     var link = window.document.createElement('link');
     link.rel = 'stylesheet';
@@ -48,11 +51,9 @@ var div;
     link.href = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css'; // get smoothness CSS; check http://jqueryui.com/themeroller/ for others, just change the theme name in url
     document.getElementsByTagName("HEAD")[0].appendChild(link);                                       // other themes: http://rtsinani.github.io/jquery-datepicker-skins/, have fun!
 
-
-
 $j(document).ready(function() {
-    createStyles();   
-   
+    createStyles();
+
     var containerDiv = document.createElement('div');
     containerDiv.id = "dragContainer";
     $j("div.container-fluid").append(containerDiv);
@@ -83,17 +84,12 @@ $j(document).ready(function() {
 
     showLocations();
 
-    
     setTimeout(function(){
-        
         (makeOriginalDivsDraggable) && makeDivsDraggable();
-        
+
     }, timeout);
-    
-    
-    
-    
-    
+
+
 (removeRedUploadButton) && removeRedUpload();
     window.setInterval(showLocations,60000); // refresh every 60 seconds
     // window.setInterval(retrieveEarnings,60000);
