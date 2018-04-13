@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Shutterstock.EnhanceDashboard
 // @namespace
-// @version      2.0.1.1
+// @version      2.0.1.2
 // @updateURL    https://gist.github.com/PSOdAz/b353842718113287589c02938ca4b310/raw/a6690af21fee1f318f38661521e2b814837e18a5/Shutterstock.EnhanceDashboard.user.js
 // @description  Show detailed localization and keyword used to download to Shutterstock Latest Downloads map, based on Satinka's https://gist.github.com/satinka/5479a93d389a07d41246 and GG update's https://gist.github.com/deymosD/ff4b0effbffefd76f58300b01e45afd4
 // @author       Satinka, GG update, PSOdAz update
@@ -21,6 +21,7 @@
 //       enables dragging page elements and moving them around; stores positions across requests (to disable, remove div#* keys from localStorage or set makeOriginalDivsDraggable to false,  line #30
 //       if trackMySales enabled, stores info about downloaded images in local storage; objective: create arrival rate distribution
 // v2.0.1.1 PSOdAz Show detailed localization and keyword used to download to Shutterstock Latest Downloads map, find image in use via google images search
+// v2.0.1.2 PSOdAz Check popular keyword.
 
 'use strict';
 
@@ -234,8 +235,7 @@ function showLocations() {
                 var long = gps[1];
                 var loc;
                 var imageInfo = [];
-                var children = [];
-                var children1 = [];
+                var keywordSearch = " ";
                 var table;
 
                 if (trackMySales) {
@@ -279,16 +279,17 @@ function showLocations() {
                 }
 
                 var t = new Date(time).toLocaleString('hr');
-                div.innerHTML += "Time: " + t + "<br />";
+                div.innerHTML += "Time: " + t + "<br /> <br />";
 
                 if (displayRecentEarnings) {
                     //div.innerHTML += "Earnings: <span id=\"earnings" + id + time + "000\">N/A</span><br />";
 
                     if (localStorage.getItem(id)) {
                         var downloadKeyword = localStorage.getItem(id);
-                        console.log(downloadKeyword);
+                        if (debug) { console.log(downloadKeyword); }
+
                         var downloadKeyword = $j.parseJSON(downloadKeyword);
-                        console.log(downloadKeyword);
+                        if (debug) { console.log(downloadKeyword); }
 
                         if (downloadKeyword.keywords.length > 0) {
                             //div.innerHTML += "<br /><b>Keywords used to download image:</b><br />";
@@ -297,13 +298,15 @@ function showLocations() {
                             var k = 0;
                             for (var j in downloadKeyword.keywords){
                                 table += "<tr><th align=\"right\"> <a target=\"_new\" href=\"https://www.shutterstock.com/search?searchterm=" + downloadKeyword.keywords[k].keyword + "&search_source=base_search_form&page=1&sort=popular&image_type=photo\">" + downloadKeyword.keywords[k].keyword + "</a></td><th align=\"right\">" + parseFloat(downloadKeyword.keywords[k].percentage * 100).toFixed(2) + "</th></tr>";
+                                keywordSearch += " " + (downloadKeyword.keywords[k].keyword);
                                 k++;
                             }
                             table += "</tbody></table><br />";
                             div.innerHTML += table;
+                            div.innerHTML += "<a target=\"_new\" href=\"https://www.shutterstock.com/search?searchterm=" + keywordSearch + "&search_source=base_search_form&page=1&sort=popular&image_type=photo\"> ( " + keywordSearch + " )</a><br /><br />";
                             //if (debug) {console.log(time)};
                         } else {
-                            div.innerHTML += "<br /><b>No keyword info available.</b><br /><br />";
+                            div.innerHTML += "<b>No keyword info available.</b><br /><br />";
                         }
                     }
 
