@@ -303,6 +303,7 @@ function showLocations() {
                             }
                             table += "</tbody></table><br />";
                             div.innerHTML += table;
+                            div.innerHTML += "<b>Check popular keywords:</b><br />";
                             div.innerHTML += "<a target=\"_new\" href=\"https://www.shutterstock.com/search?searchterm=" + keywordSearch + "&search_source=base_search_form&page=1&sort=popular&image_type=photo\"> ( " + keywordSearch + " )</a><br /><br />";
                             //if (debug) {console.log(time)};
                         } else {
@@ -321,7 +322,7 @@ function showLocations() {
 
             $j("span.refreshCoords").on("click", function() {
                 $j("span.refreshCoords").text("Refreshing...");
-                showLocations(); 
+                showLocations();
             });
 
             localStorage.removeItem('lastEarnings');
@@ -413,13 +414,13 @@ function createStyles() {
         style.appendChild(document.createTextNode(""));
         document.head.appendChild(style);
         return style.sheet;
-    })(); 
+    })();
     var refreshCoords = "cursor: hand; cursor: pointer; text-decoration: underline;";
 
     var ggDL = "position: fixed; top: 60px; left: 50px; width: 200px; height: 95%; overflow: auto; z-index:3;" +
         "border: 1px solid #eeeeee; background-color: white; resize: both;" +
         "font-size: 11px;" +
-        "padding: 2px 3px 0 5px;" + 
+        "padding: 2px 3px 0 5px;" +
         "text-shadow: 0 0 5px #fff; text-align: left;";
 
     //   var map = "position: fixed; top: 60px; left: 320px; width: 1000px; height: 95%; overflow: auto; background-color: #eeeeee;";
